@@ -1,9 +1,15 @@
 #include <iostream>
 using namespace std;
 int main() {
-    double x = 10.3 ;
-    double y = 20.6 ;
+    int x = 10 ;
+    int y = 10 ;
     auto z = x + y * (y-x) ;
-    cout << x  << " " << "+"  << " " << y  << " " << "is"  << " " << z << "\n";
+    if (x > y ) 
+        cout << "x is greater" << "\n";
+    else if (x < y ) 
+        cout << "y is greater" << "\n";
+    else 
+        cout << "x and y are equal" << "\n";
+        cout << x  << " " << "+"  << " " << y  << " " << "is"  << " " << z << "\n";
     return 0;
 }

@@ -1,11 +1,19 @@
 # declaring x
-x = 10.3
+x = 10
 
 # declaring y
-y = 20.6
+y = 10
 
 # adding x and y
 z = x + y * (y-x)
+
+if x > y
+    print "x is greater"
+else if x < y
+    print "y is greater"
+else
+    print "x and y are equal"
+
 
 # printing the values
 print x "+" y "is" z 

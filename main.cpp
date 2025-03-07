@@ -66,22 +66,49 @@ int main(int argc, char *argv[])
         cppFile << "#include <iostream>\nusing namespace std;\nint main() {\n";
 
         string line;
+        string indentation = "    "; // 4 spaces for nested conditions
+        bool insideBlock = false;
+
         while (getline(file, line))
         {
             List<string> tokens = split(line);
             if (tokens.getSize() == 0)
                 continue; // Ignore empty lines
 
-            if (tokens[0] == "print")
+            if (tokens[0] == "if" || (tokens.getSize() > 1 && tokens[0] == "else" && tokens[1] == "if") || tokens[0] == "else")
             {
-                cppFile << "    cout << ";
-
+                if (tokens[0] == "else" && tokens.getSize() > 1) // else if case
+                {
+                    cppFile << "    else if (";
+                    for (int i = 2; i < tokens.getSize(); i++)
+                    {
+                        cppFile << tokens[i] << " ";
+                    }
+                    cppFile << ") \n";
+                }
+                else if (tokens[0] == "if") // if case
+                {
+                    cppFile << "    if (";
+                    for (int i = 1; i < tokens.getSize(); i++)
+                    {
+                        cppFile << tokens[i] << " ";
+                    }
+                    cppFile << ") \n";
+                }
+                else // else case (NO CONDITION!)
+                {
+                    cppFile << "    else \n";
+                }
+            }
+            else if (tokens[0] == "print") // Inside if-else block
+            {
+                cppFile << indentation << "    cout << ";
                 for (int i = 1; i < tokens.getSize(); i++)
                 {
-                    if (i > 1) // Add << only **before** the next token
+                    if (i > 1)
                         cppFile << " << \" \" << ";
 
-                    if (tokens[i][0] == '"') // Handling multi-word strings
+                    if (tokens[i][0] == '"')
                     {
                         cppFile << tokens[i] << " ";
                         while (tokens[i][tokens[i].length() - 1] != '"')
@@ -95,13 +122,15 @@ int main(int argc, char *argv[])
                         cppFile << tokens[i] << " ";
                     }
                 }
-
-                cppFile << "<< \"\\n\";\n"; // Ensure newline at the end
+                cppFile << "<< \"\\n\";\n";
             }
-
-            else if (tokens.getSize() >= 3 && tokens[1] == "=")
+            else if (insideBlock) // Closing if-else block
             {
-                // Variable assignment with expressions
+                cppFile << indentation << "}\n";
+                insideBlock = false;
+            }
+            else if (tokens.getSize() >= 3 && tokens[1] == "=") // Variable assignment
+            {
                 string varName = tokens[0];
                 string expression = "";
                 bool containsOperators = false;
@@ -123,7 +152,7 @@ int main(int argc, char *argv[])
                     type = containsOperators ? "auto" : inferType(tokens[2]);
                 }
 
-                cppFile << "    " << type << " " << varName << " = " << expression << ";\n";
+                cppFile << indentation << type << " " << varName << " = " << expression << ";\n";
             }
         }
 
