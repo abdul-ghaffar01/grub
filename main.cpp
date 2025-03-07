@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
+#include <unordered_set>
 #include "error.cpp"
 #include "list.cpp"
 #include "utils.cpp"
@@ -68,6 +69,7 @@ int main(int argc, char *argv[])
         string line;
         string indentation = "    "; // 4 spaces for nested conditions
         bool insideBlock = false;
+        unordered_set<string> declaredVariables;
 
         while (getline(file, line))
         {
@@ -99,6 +101,19 @@ int main(int argc, char *argv[])
                 {
                     cppFile << "    else \n";
                 }
+            }
+            else if (tokens[0] == "while") // Handling while loops
+            {
+                cppFile << "    while (";
+                for (int i = 1; i < tokens.getSize(); i++)
+                {
+                    cppFile << tokens[i] << " ";
+                }
+                cppFile << ") {\n";
+            }
+            else if (tokens[0] == "end")
+            {
+                cppFile << "}\n";
             }
             else if (tokens[0] == "print") // Inside if-else block
             {
@@ -142,17 +157,24 @@ int main(int argc, char *argv[])
                     expression += tokens[i] + " ";
                 }
 
-                string type;
-                if (isStringLiteral(tokens[2]))
+                if (declaredVariables.find(varName) == declaredVariables.end())
                 {
-                    type = "string";
+                    string type;
+                    if (isStringLiteral(tokens[2]))
+                    {
+                        type = "string";
+                    }
+                    else
+                    {
+                        type = containsOperators ? "auto" : inferType(tokens[2]);
+                    }
+                    cppFile << indentation << type << " " << varName << " = " << expression << ";\n";
+                    declaredVariables.insert(varName);
                 }
                 else
                 {
-                    type = containsOperators ? "auto" : inferType(tokens[2]);
+                    cppFile << indentation << varName << " = " << expression << ";\n";
                 }
-
-                cppFile << indentation << type << " " << varName << " = " << expression << ";\n";
             }
         }
 

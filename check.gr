@@ -14,6 +14,18 @@ else if x < y
 else
     print "x and y are equal"
 
+i = 100
+while i <= 110
+    print "The value of i is" i
+    i = i+1
+end
+
+cpp{
+    int a = 34;
+    for (int i = a; i<a+5; i++){
+        cout << "The value of a is " << a << endl;
+    }
+}
 
 # printing the values
-print x "+" y "is" z 
+print x "+" y "is" x+y
