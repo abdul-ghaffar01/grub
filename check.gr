@@ -1,1 +1,11 @@
-print("hello world")
+# declaring x
+x = 10.3
+
+# declaring y
+y = 20.6
+
+# adding x and y
+z = x + y * (y-x)
+
+# printing the values
+print x "+" y "is" z 

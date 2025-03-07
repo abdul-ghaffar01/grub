@@ -1,3 +1,5 @@
+#ifndef LIST
+#define LIST
 #include <iostream>
 #include "error.cpp"
 
@@ -86,3 +88,4 @@ int List<T>::getSize() const {
     return size;
 }
 
+#endif
