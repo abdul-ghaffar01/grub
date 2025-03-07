@@ -137,12 +137,12 @@ int main(int argc, char *argv[])
                 }
             }
 
-            else if (tokens[0] == "if" || (tokens.getSize() > 1 && tokens[0] == "else" && tokens[1] == "if") || tokens[0] == "else")
+            else if (tokens[0] == "if" || tokens[0] == "elif" || tokens[0] == "else")
             {
-                if (tokens[0] == "else" && tokens.getSize() > 1) // else if case
+                if (tokens[0] == "elif") // else if case
                 {
                     cppFile << "    else if (";
-                    for (int i = 2; i < tokens.getSize(); i++)
+                    for (int i = 1; i < tokens.getSize(); i++)
                     {
                         cppFile << tokens[i] << " ";
                     }
