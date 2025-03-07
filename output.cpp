@@ -1,3 +1,11 @@
+    #include <iostream>
+    #include <vector>
+    #include <map>
+    #include <thread>
+    #include <mutex>
+    #include <fstream>
+    #include <algorithm>
+
 #include <iostream>
 using namespace std;
 int main() {
@@ -15,6 +23,13 @@ int main() {
         cout << "The value of i is"  << " " << i << "\n";
     i = i+1 ;
 }
+    for(int i = 0; i<20; i++){
+        for( int j = 0; j<=i; j++){
+            cout << "*" << " ";
+        }
+        cout << endl;
+    }
+
         cout << x  << " " << "+"  << " " << y  << " " << "is"  << " " << x+y << "\n";
     return 0;
 }

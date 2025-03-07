@@ -9,6 +9,30 @@
 
 using namespace std;
 
+void prependToFile(const string &filename, const string &text)
+{
+    ifstream file(filename);
+    if (!file)
+    {
+        cerr << "File not found: " << filename << endl;
+        return;
+    }
+
+    string existingContent((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
+    file.close();
+
+    ofstream outFile(filename);
+    if (!outFile)
+    {
+        cerr << "Failed to open file for writing." << endl;
+        return;
+    }
+
+    outFile << text << endl
+            << existingContent; // Prepend text and then append old content
+    outFile.close();
+}
+
 // Function to check if a string is a number
 bool isNumber(const string &str)
 {
@@ -46,6 +70,7 @@ bool isStringLiteral(const string &token)
 
 int main(int argc, char *argv[])
 {
+    string includes = "";
     try
     {
         if (argc == 1)
@@ -77,7 +102,42 @@ int main(int argc, char *argv[])
             if (tokens.getSize() == 0)
                 continue; // Ignore empty lines
 
-            if (tokens[0] == "if" || (tokens.getSize() > 1 && tokens[0] == "else" && tokens[1] == "if") || tokens[0] == "else")
+            if (tokens[0] == "includes{") // Handling include blocks
+            {
+                while (getline(file, line))
+                {
+                    if (line == "}")
+                    {
+                        break; // Stop when closing brace is found
+                    }
+                    // cppFile << line << "\n"; // Write includes at the top
+                    includes += line + '\n';
+                }
+            }
+            else if (tokens[0] == "cpp{" || tokens[0] == "cpp") // Handling raw C++ blocks
+            {
+                List<char> braceStack; // Stack to track `{ }`
+                braceStack.push('{');  // Push the first opening brace
+
+                while (getline(file, line))
+                {
+                    if (line.find("{") != string::npos)
+                    {
+                        braceStack.push('{'); // Push if another { is found
+                    }
+                    if (line.find("}") != string::npos)
+                    {
+                        braceStack.pop(); // Pop when } is found
+                        if (braceStack.empty())
+                        {
+                            break; // Stop when all { are closed
+                        }
+                    }
+                    cppFile << line << "\n"; // Write raw C++ code
+                }
+            }
+
+            else if (tokens[0] == "if" || (tokens.getSize() > 1 && tokens[0] == "else" && tokens[1] == "if") || tokens[0] == "else")
             {
                 if (tokens[0] == "else" && tokens.getSize() > 1) // else if case
                 {
@@ -179,9 +239,12 @@ int main(int argc, char *argv[])
         }
 
         cppFile << "    return 0;\n}\n";
+        
         cppFile.close();
         file.close();
 
+        // appending the includes at the top
+        prependToFile("output.cpp", includes);
         // Compile the transpiled C++ code
         if (system("g++ output.cpp -o output") != 0)
         {
