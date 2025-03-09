@@ -1,0 +1,22 @@
+{
+    "name": "GRUB",
+    "scopeName": "source.grub",
+    "patterns": [
+        {
+            "match": "\\b(includes|while|print|cpp|end)\\b",
+            "name": "keyword.control.grub"
+        },
+        {
+            "match": "#.*",
+            "name": "comment.line.grub"
+        },
+        {
+            "match": "\\b[0-9]+\\b",
+            "name": "constant.numeric.grub"
+        },
+        {
+            "match": "\".*?\"",
+            "name": "string.quoted.double.grub"
+        }
+    ]
+}

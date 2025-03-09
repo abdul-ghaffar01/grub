@@ -1,0 +1,28 @@
+{
+  "name": "grub-ext",
+  "displayName": "GRUB Language Extension",
+  "description": "VS Code extension for the GRUB programming language",
+  "version": "0.0.1",
+  "publisher": "your-publisher-name",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": ["Programming Languages"],
+  "contributes": {
+    "grammars": [
+      {
+        "language": "grub",
+        "scopeName": "source.grub",
+        "path": "./syntaxes/grub.tmLanguage.json"
+      }
+    ],
+    "languages": [
+      {
+        "id": "grub",
+        "aliases": ["GRUB", "grub"],
+        "extensions": [".gr"],
+        "configuration": "./language-configuration.json"
+      }
+    ]
+  }
+}

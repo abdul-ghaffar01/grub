@@ -1,8 +1,23 @@
-a = 10
-b = 12
-if a > b
-    print "a is greater than b"
-elif a < b
-    print "b is greater than a"
-else
-    print "a and b are equal"
+includes {
+    #include <cmath>
+}
+
+# Commenting the line 
+
+i = 0
+while i < 5
+    print "value of i is" i
+    i = i+1
+end
+
+cpp {
+    cout << "Execution of cpp code starts here" << endl;
+    // this is a comment of cpp
+    for(int i = 0; i<5; i++){
+        for(int j = 0; j<=i; j++){
+            cout << "* ";
+        }cout << endl;
+    }
+    cout << "The square root of 16 is " << sqrt(16) << endl;
+    cout << "Execution of cpp code ends here" << endl;
+}
